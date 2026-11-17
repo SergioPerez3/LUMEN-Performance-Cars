@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>LUMEN · Performance Cars</title>
+<meta name="description" content="LUMEN Performance Cars: showroom ficticio de deportivos en Madrid. Proyecto de portfolio.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Unbounded:wght@300;400;600;800&family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#060708;--bg2:#0d0f12;--line:rgba(255,255,255,.1);--txt:#f2f3f5;--mut:#8b9098;--acc:#ff2a1a;--display:'Unbounded',system-ui,sans-serif;--sans:'Inter',system-ui,sans-serif;--r:22px}
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip;-webkit-text-size-adjust:100%}
+body{background:var(--bg);color:var(--txt);font-family:var(--sans);line-height:1.6;overflow-x:hidden;overflow-x:clip;transition:--acc .6s}
+body.lock{overflow:hidden}
+img,video{display:block;max-width:100%}
+a{color:inherit;text-decoration:none}
+button{font:inherit;color:inherit;background:none;border:none;cursor:pointer}
+input,select{font:inherit;color:inherit}
+.wrap{width:min(1280px,92%);margin:0 auto}
+.eyebrow{font-size:.72rem;font-weight:700;letter-spacing:.35em;text-transform:uppercase;color:var(--acc);transition:color .6s}
+.h2{font-family:var(--display);font-weight:600;font-size:clamp(2rem,5vw,4.2rem);line-height:1.02;letter-spacing:-.02em;margin:.3em 0 .4em}
+.h2 em{font-style:normal;color:var(--acc);transition:color .6s}
+.lead{color:var(--mut);font-size:1.08rem;max-width:620px}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:.6em;padding:1em 1.7em;border-radius:999px;font-weight:700;font-size:.92rem;letter-spacing:.04em;text-transform:uppercase;transition:transform .35s cubic-bezier(.2,.8,.2,1),background .3s,color .3s,box-shadow .3s;white-space:nowrap}
+.btn-acc{background:var(--acc);color:#000;box-shadow:0 0 0 0 var(--acc)}
+.btn-acc:hover{box-shadow:0 0 40px -6px var(--acc)}
+.btn-acc:disabled{opacity:.35;cursor:not-allowed;box-shadow:none}
+.btn-line{border:1px solid rgba(255,255,255,.35)}
+.btn-line:hover{background:#fff;color:#000}
+.reveal{opacity:0;transform:translateY(40px);transition:opacity 1s,transform 1.1s cubic-bezier(.2,.8,.2,1);transition-delay:var(--d,0s)}
+.reveal.in{opacity:1;transform:none}
+.sec{padding:140px 0;position:relative}
+
+/* cursor */
+.cur,.ring{position:fixed;left:0;top:0;pointer-events:none;z-index:999;border-radius:50%;transform:translate(-50%,-50%)}
+.cur{width:6px;height:6px;background:var(--acc);box-shadow:0 0 12px var(--acc)}
+.ring{width:40px;height:40px;border:1px solid rgba(255,255,255,.35);transition:width .3s,height .3s,border-color .3s}
+.ring.hov{width:64px;height:64px;border-color:var(--acc)}
+@media (hover:none),(pointer:coarse){.cur,.ring{display:none}}
+
+/* loader */
+#loader{position:fixed;inset:0;z-index:1000;background:#000;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:22px;transition:opacity .8s,visibility .8s}
+#loader.hide{opacity:0;visibility:hidden}
+#loader b{font-family:var(--display);font-weight:300;font-size:clamp(2.4rem,8vw,4.5rem);letter-spacing:.5em;margin-right:-.5em}
+#loader .bar{width:200px;height:2px;background:rgba(255,255,255,.1);position:relative;overflow:hidden}
+#loader .bar i{position:absolute;inset:0 auto 0 0;width:0;background:#fff;box-shadow:0 0 14px #fff;transition:width .3s}
+
+/* nav */
+.nav{position:fixed;inset:0 0 auto;z-index:80;padding:22px 0;transition:background .4s,padding .4s,border-color .4s;border-bottom:1px solid transparent}
+.nav.solid{background:rgba(6,7,8,.78);backdrop-filter:blur(16px);padding:12px 0;border-color:var(--line)}
+.nav .wrap{display:flex;align-items:center;justify-content:space-between;gap:20px}
+.logo{font-family:var(--display);font-weight:600;letter-spacing:.32em;font-size:1.15rem;display:flex;align-items:center;gap:10px}
+.logo i{width:8px;height:8px;border-radius:50%;background:var(--acc);box-shadow:0 0 14px var(--acc);transition:background .6s,box-shadow .6s}
+.links{display:flex;align-items:center;gap:28px;font-size:.86rem;font-weight:600;letter-spacing:.06em;text-transform:uppercase}
+.links a:not(.btn){opacity:.75;transition:opacity .3s}
+.links a:not(.btn):hover{opacity:1}
+.links .btn{padding:.7em 1.3em;font-size:.78rem}
+.burger{display:none;width:46px;height:46px;border-radius:50%;border:1px solid var(--line);position:relative}
+.burger span{position:absolute;left:14px;right:14px;height:1.5px;background:#fff;transition:.35s}
+.burger span:nth-child(1){top:18px}.burger span:nth-child(2){top:27px}
+.nav.open .burger span:nth-child(1){transform:translateY(4.5px) rotate(45deg)}
+.nav.open .burger span:nth-child(2){transform:translateY(-4.5px) rotate(-45deg)}
+
+/* INTRO */
+.intro{height:340vh;position:relative;background:#000}
+.stick{position:sticky;top:0;height:100vh;height:100svh;overflow:hidden}
+.stick video,.stick canvas,.stick .still{position:absolute;inset:0;width:100%;height:100%;object-fit:cover}
+.stick canvas{display:none}
+.useSeq video{display:none}.useSeq canvas{display:block}
+.stick .still{opacity:0}
+.stick .shade{position:absolute;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.55),rgba(0,0,0,0) 30%,rgba(0,0,0,0) 60%,rgba(0,0,0,.75))}
+.lA,.lB{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;text-align:center;padding:0 6%}
+.lA{justify-content:center}
+.lA h1{font-family:var(--display);font-weight:300;font-size:clamp(3.4rem,13vw,11rem);letter-spacing:.35em;margin-right:-.35em;line-height:1}
+.lA h1 span{display:inline-block;opacity:0;filter:blur(14px);animation:on .9s forwards}
+@keyframes on{60%{opacity:1;filter:blur(0);text-shadow:0 0 40px #fff}100%{opacity:1;filter:blur(0);text-shadow:0 0 0 transparent}}
+.lA small{letter-spacing:.5em;font-size:.72rem;font-weight:700;margin-top:18px;opacity:0;animation:fade 1s 1.4s forwards}
+@keyframes fade{to{opacity:.8}}
+.hint{position:absolute;bottom:38px;left:50%;transform:translateX(-50%);display:flex;flex-direction:column;align-items:center;gap:10px;font-size:.68rem;letter-spacing:.35em;font-weight:700;white-space:nowrap;opacity:0;animation:fade 1s 1.9s forwards}
+.hint i{width:1px;height:50px;background:linear-gradient(#fff,transparent)}
+.lB{justify-content:flex-end;padding-bottom:13vh;opacity:0;pointer-events:none;transition:opacity .6s}
+.lB.show{opacity:1;pointer-events:auto}
+.lB h2{font-family:var(--display);font-weight:600;font-size:clamp(2.1rem,6vw,5rem);line-height:1.02;letter-spacing:-.02em;max-width:1000px;text-shadow:0 10px 40px rgba(0,0,0,.6)}
+.lB h2 .w{display:inline-block;overflow:hidden;vertical-align:top;padding-bottom:.06em}
+.lB h2 .w span{display:inline-block;transform:translateY(110%);transition:transform 1s cubic-bezier(.2,.8,.2,1)}
+.lB.show h2 .w span{transform:none}
+.lB .eyebrow{display:block;margin-bottom:14px}
+.lB p{color:#cfd3d8;max-width:560px;margin:16px auto 0;opacity:0;transition:1s .5s}
+.lB .cta{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;margin-top:24px;opacity:0;transform:translateY(16px);transition:1s .7s}
+.lB.show p,.lB.show .cta{opacity:1;transform:none}
+.gauge{position:absolute;right:38px;bottom:38px;width:150px;text-align:center}
+.gauge svg{width:150px;height:110px;overflow:visible}
+.gauge b{display:block;font-family:var(--display);font-size:1.6rem;font-weight:400;margin-top:-34px}
+.gauge small{font-size:.62rem;letter-spacing:.3em;color:var(--mut);font-weight:700}
+.iprog{position:absolute;left:0;bottom:0;height:2px;background:var(--acc);box-shadow:0 0 10px var(--acc);width:0}
+
+/* marquee */
+.marq{border-block:1px solid var(--line);padding:20px 0;overflow:hidden;white-space:nowrap}
+.marq div{display:inline-flex;gap:50px;animation:mq 38s linear infinite;font-family:var(--display);font-weight:300;font-size:clamp(1.2rem,2.6vw,2rem);letter-spacing:.06em}
+.marq span{display:inline-flex;align-items:center;gap:50px;opacity:.85}
+.marq span::after{content:"";width:8px;height:8px;border-radius:50%;background:var(--acc)}
+@keyframes mq{to{transform:translateX(-50%)}}
+
+/* manifesto */
+.statement{font-family:var(--display);font-weight:400;font-size:clamp(1.6rem,3.8vw,3.2rem);line-height:1.25;letter-spacing:-.01em;max-width:1150px}
+.statement span{opacity:.12;transition:opacity .25s}
+.statement span.on{opacity:1}
+.stats{display:grid;grid-template-columns:repeat(4,1fr);gap:20px;margin-top:80px;border-top:1px solid var(--line);padding-top:36px}
+.stats b{font-family:var(--display);font-weight:400;font-size:clamp(2rem,4.5vw,3.6rem);display:block;line-height:1}
+.stats span{color:var(--mut);font-size:.9rem;font-weight:500}
+
+/* SHOWROOM */
+.show-head{display:flex;justify-content:space-between;align-items:flex-end;gap:30px;flex-wrap:wrap}
+.chips{display:flex;gap:8px;flex-wrap:wrap}
+.chips button{padding:.6em 1.2em;border-radius:999px;border:1px solid var(--line);font-size:.8rem;font-weight:700;letter-spacing:.08em;text-transform:uppercase;transition:.3s}
+.chips button:hover{border-color:rgba(255,255,255,.4)}
+.chips button.on{background:#fff;color:#000;border-color:#fff}
+.stage{position:relative;margin-top:36px;border-radius:var(--r);overflow:hidden;aspect-ratio:1376/680;background:#000;border:1px solid var(--line)}
+.stage .ph{position:absolute;inset:0;transition:opacity .7s ease,transform 1.2s cubic-bezier(.2,.8,.2,1)}
+.stage .ph img{width:100%;height:100%;object-fit:cover}
+.stage .ph.old{opacity:0;transform:scale(1.04)}
+.stage .ph.new{animation:carIn 1.2s cubic-bezier(.2,.8,.2,1)}
+@keyframes carIn{from{opacity:0;transform:scale(1.08) translateX(3%)}to{opacity:1;transform:none}}
+.sweep{position:absolute;inset:0;pointer-events:none;background:linear-gradient(100deg,transparent 35%,rgba(255,255,255,.55) 50%,transparent 65%);transform:translateX(-120%);mix-blend-mode:overlay}
+.sweep.go{animation:sweep 1.1s ease-out}
+@keyframes sweep{to{transform:translateX(120%)}}
+.tilt{position:absolute;inset:0;transition:transform .3s ease-out;transform-style:preserve-3d}
+.callouts{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+.callouts .co path{fill:none;stroke:#fff;stroke-width:1.6;stroke-dasharray:var(--len);stroke-dashoffset:var(--len);transition:stroke-dashoffset .9s cubic-bezier(.6,0,.2,1);transition-delay:var(--dl)}
+.callouts .co circle.p{fill:var(--acc);transition:fill .6s}
+.callouts .co circle.halo{fill:none;stroke:var(--acc);stroke-width:2;animation:halo 1.8s infinite;transform-box:fill-box;transform-origin:center}
+@keyframes halo{from{transform:scale(.6);opacity:1}to{transform:scale(2.6);opacity:0}}
+.callouts .co text{fill:#fff;opacity:0;transition:opacity .6s;transition-delay:calc(var(--dl) + .6s);paint-order:stroke;stroke:rgba(0,0,0,.75);stroke-width:5px}
+.callouts .co text.k{font:700 13px var(--sans);letter-spacing:.2em;fill:#aab0b8}
+.callouts .co text.v{font:600 22px var(--display)}
+.callouts .co.on path{stroke-dashoffset:0}
+.callouts .co.on text{opacity:1}
+.callouts .co.n text.num{opacity:1;font:800 16px var(--sans);fill:#000;stroke:none}
+.stage-info{position:absolute;left:28px;top:24px;z-index:3;max-width:360px}
+.stage-info .brand{font-size:.72rem;letter-spacing:.35em;font-weight:700;color:var(--acc);text-transform:uppercase;transition:color .6s}
+.stage-info h3{font-family:var(--display);font-weight:600;font-size:clamp(1.6rem,3.2vw,2.8rem);line-height:1.05;margin:6px 0}
+.stage-info .meta{color:#c4c8ce;font-size:.88rem}
+.stage-nav{position:absolute;right:22px;top:22px;z-index:3;display:flex;align-items:center;gap:10px;font-family:var(--display);font-size:.9rem}
+.stage-nav button{width:46px;height:46px;border-radius:50%;border:1px solid rgba(255,255,255,.3);background:rgba(0,0,0,.35);backdrop-filter:blur(8px);font-size:1.1rem;transition:.3s}
+.stage-nav button:hover{background:#fff;color:#000}
+.tabs{position:absolute;left:50%;bottom:20px;transform:translateX(-50%);z-index:3;display:flex;gap:4px;padding:5px;border-radius:999px;background:rgba(0,0,0,.5);backdrop-filter:blur(10px);border:1px solid var(--line)}
+.tabs button{padding:.55em 1.1em;border-radius:999px;font-size:.74rem;font-weight:700;letter-spacing:.1em;text-transform:uppercase;transition:.3s;opacity:.7}
+.tabs button.on{background:var(--acc);color:#000;opacity:1}
+.callist{display:none}
+.under{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;margin-top:26px;align-items:start}
+.bars{display:grid;grid-template-columns:repeat(4,1fr);gap:16px}
+.bar b{font-family:var(--display);font-weight:400;font-size:clamp(1.5rem,2.6vw,2.2rem);display:block;line-height:1.1}
+.bar b small{font-family:var(--sans);font-size:.8rem;color:var(--mut);margin-left:4px}
+.bar span{font-size:.72rem;letter-spacing:.2em;font-weight:700;color:var(--mut);text-transform:uppercase}
+.bar i{display:block;height:3px;background:rgba(255,255,255,.08);margin-top:10px;position:relative;overflow:hidden;border-radius:3px}
+.bar i::after{content:"";position:absolute;inset:0;width:var(--w,0%);background:var(--acc);box-shadow:0 0 10px var(--acc);transition:width 1.2s cubic-bezier(.2,.8,.2,1),background .6s}
+.buy{display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;border:1px solid var(--line);border-radius:var(--r);padding:20px 24px;background:var(--bg2)}
+.buy small{display:block;color:var(--mut);font-size:.72rem;letter-spacing:.2em;font-weight:700;text-transform:uppercase}
+.buy b{font-family:var(--display);font-weight:400;font-size:1.9rem}
+.buy .acts{display:flex;gap:8px;flex-wrap:wrap}
+.thumbs{display:grid;grid-template-columns:repeat(6,1fr);gap:12px;margin-top:22px}
+.thumbs button{border-radius:14px;overflow:hidden;border:1px solid var(--line);text-align:left;transition:.35s;background:var(--bg2);position:relative}
+.thumbs button img{aspect-ratio:16/9;object-fit:cover;width:100%;opacity:.55;transition:opacity .35s,transform .6s}
+.thumbs button:hover img{opacity:1;transform:scale(1.05)}
+.thumbs button.on{border-color:var(--c)}
+.thumbs button.on img{opacity:1}
+.thumbs button div{padding:8px 12px;font-size:.78rem;font-weight:700}
+.thumbs button div small{display:block;color:var(--mut);font-weight:500}
+.thumbs button.hide{display:none}
+.thumbs button::after{content:"";position:absolute;left:0;right:0;top:0;height:3px;background:var(--c);transform:scaleX(0);transition:transform .4s}
+.thumbs button.on::after{transform:none}
+.note{color:var(--mut);font-size:.76rem;margin-top:14px}
+
+/* comparador */
+.cmp-grid{display:grid;grid-template-columns:1fr auto 1fr;gap:24px;align-items:center;margin-top:44px}
+.cmp-side select{width:100%;background:var(--bg2);border:1px solid var(--line);border-radius:14px;padding:.85em 1em;outline:none}
+.cmp-side img{border-radius:16px;margin-top:12px;aspect-ratio:16/9;object-fit:cover;width:100%;border:1px solid var(--line)}
+.vs{font-family:var(--display);font-size:2.2rem;font-weight:800;color:var(--acc)}
+.cmp-rows{margin-top:36px;display:grid;gap:22px}
+.crow .lab{text-align:center;font-size:.72rem;letter-spacing:.25em;font-weight:700;color:var(--mut);text-transform:uppercase;margin-bottom:8px}
+.crow .cols{display:grid;grid-template-columns:1fr 1fr;gap:10px;align-items:center}
+.cb{position:relative;height:40px;border-radius:10px;background:rgba(255,255,255,.05);overflow:hidden;display:flex;align-items:center;padding:0 14px;font-weight:700;font-family:var(--display);font-size:.95rem}
+.cb i{position:absolute;inset:0;width:var(--w,0%);background:var(--c);opacity:.25;transition:width 1.1s cubic-bezier(.2,.8,.2,1)}
+.cb.win i{opacity:.55}
+.cb span{position:relative}
+.cb.l{flex-direction:row-reverse}
+.cb.l i{left:auto;right:0}
+.cb .w{position:relative;font-size:.62rem;letter-spacing:.2em;margin:0 10px;color:#fff;opacity:0}
+.cb.win .w{opacity:.9}
+
+/* interior (zoom) */
+.inside{height:260vh;position:relative}
+.inside .stick{display:flex;align-items:center}
+.inside img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transform-origin:45% 45%;will-change:transform}
+.inside .ov{position:absolute;inset:0;background:linear-gradient(90deg,rgba(0,0,0,.85),rgba(0,0,0,.35) 50%,rgba(0,0,0,.1))}
+.inside .txt{position:relative;z-index:2;width:min(1280px,92%);margin:0 auto}
+.inside .txt>div{max-width:470px}
+.inside ul{list-style:none;margin-top:24px;display:grid;gap:12px}
+.inside li{display:flex;gap:14px;align-items:baseline;border-bottom:1px solid var(--line);padding-bottom:12px;opacity:0;transform:translateX(-20px);transition:.7s}
+.inside li.in{opacity:1;transform:none}
+.inside li b{font-family:var(--display);color:var(--acc);font-size:.9rem}
+
+/* llanta */
+.wheel-s{display:grid;grid-template-columns:1fr 1fr;gap:60px;align-items:center}
+.wheel{width:min(500px,84vw);aspect-ratio:1;border-radius:50%;overflow:hidden;position:relative;margin:0 auto;box-shadow:0 0 0 1px var(--line),0 0 120px -30px var(--acc);will-change:transform}
+.wheel img{position:absolute;max-width:none}
+.wheel-wrap{position:relative}
+.wheel-wrap::after{content:attr(data-rpm);position:absolute;left:50%;bottom:-40px;transform:translateX(-50%);font-family:var(--display);font-size:.8rem;letter-spacing:.2em;color:var(--mut)}
+.specs{list-style:none;margin-top:26px;display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.specs li{border:1px solid var(--line);border-radius:16px;padding:16px 18px;background:var(--bg2)}
+.specs b{font-family:var(--display);font-weight:400;font-size:1.3rem;display:block}
+.specs span{color:var(--mut);font-size:.85rem}
+
+/* financiación */
+.fin{display:grid;grid-template-columns:1.2fr 1fr;gap:30px;margin-top:44px}
+.panel{border:1px solid var(--line);border-radius:var(--r);padding:30px;background:var(--bg2)}
+.field{margin-bottom:22px}
+.field label{display:flex;justify-content:space-between;font-size:.78rem;letter-spacing:.15em;font-weight:700;text-transform:uppercase;color:var(--mut);margin-bottom:10px}
+.field label b{color:var(--txt);letter-spacing:0;font-size:.95rem}
+.field select{width:100%;background:#000;border:1px solid var(--line);border-radius:12px;padding:.8em 1em;outline:none}
+input[type=range]{-webkit-appearance:none;appearance:none;width:100%;height:4px;border-radius:4px;background:linear-gradient(90deg,var(--acc) var(--p,50%),rgba(255,255,255,.12) var(--p,50%));outline:none}
+input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:22px;height:22px;border-radius:50%;background:#fff;box-shadow:0 0 0 5px rgba(255,255,255,.12);cursor:pointer}
+input[type=range]::-moz-range-thumb{width:22px;height:22px;border-radius:50%;background:#fff;border:none;cursor:pointer}
+.quote{display:flex;flex-direction:column;justify-content:center;text-align:center;position:relative;overflow:hidden}
+.quote::before{content:"";position:absolute;width:300px;height:300px;border-radius:50%;background:var(--acc);filter:blur(120px);opacity:.25;left:50%;top:30%;transform:translate(-50%,-50%);transition:background .6s}
+.quote small{position:relative;letter-spacing:.3em;font-weight:700;font-size:.72rem;color:var(--mut)}
+.quote .qbig{position:relative;font-family:var(--display);font-weight:600;font-size:clamp(3rem,6vw,4.6rem);line-height:1;margin:10px 0}
+.quote .qbig em{font-style:normal;font-size:.35em;color:var(--mut);font-weight:400}
+.quote ul{position:relative;list-style:none;margin-top:22px;display:grid;gap:8px;text-align:left}
+.quote li{display:flex;justify-content:space-between;color:var(--mut);font-size:.92rem;border-bottom:1px solid var(--line);padding-bottom:8px}
+.quote li b{color:var(--txt)}
+
+/* prueba */
+.td{display:grid;grid-template-columns:1.3fr 1fr;gap:30px;margin-top:44px;align-items:start}
+.td>*,.fin>*,.cmp-grid>*,.wheel-s>*,.under>*,.visit>*{min-width:0}
+.pickc{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-bottom:22px}
+.pickc button{border:1px solid var(--line);border-radius:14px;overflow:hidden;text-align:left;transition:.3s;background:#000}
+.pickc img{aspect-ratio:16/9;object-fit:cover;width:100%;opacity:.6;transition:.3s}
+.pickc button.on{border-color:var(--c)}
+.pickc button.on img{opacity:1}
+.pickc span{display:block;padding:7px 10px;font-size:.76rem;font-weight:700}
+.calh{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+.calh b{font-family:var(--display);font-weight:400;font-size:1.05rem}
+.calh button{width:38px;height:38px;border-radius:50%;border:1px solid var(--line)}
+.calh button:hover{background:#fff;color:#000}
+.calh button:disabled{opacity:.25;pointer-events:none}
+.cal{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:5px}
+.cal .wd{text-align:center;font-size:.7rem;font-weight:700;color:var(--mut);padding:4px 0}
+.day{aspect-ratio:1;border-radius:10px;padding:0;min-width:0;font-weight:600;font-size:.9rem;background:rgba(255,255,255,.04);transition:.2s}
+.day:not(:disabled):hover{background:rgba(255,255,255,.12)}
+.day:disabled{opacity:.2;cursor:default;background:transparent}
+.day.empty{background:transparent}
+.day.on{background:var(--acc);color:#000}
+.slots{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:8px;margin-top:18px}
+.slots button{padding:.7em 0;border-radius:12px;border:1px solid var(--line);font-weight:700;font-size:.85rem;transition:.25s}
+.slots button:hover:not(:disabled){border-color:#fff}
+.slots button:disabled{opacity:.25;text-decoration:line-through;cursor:not-allowed}
+.slots button.on{background:#fff;color:#000}
+.form{display:grid;gap:12px;margin-top:6px}
+.form input{background:#000;border:1px solid var(--line);border-radius:12px;padding:.85em 1em;outline:none;transition:border-color .3s}
+.form input:focus{border-color:var(--acc)}
+.sumtd{display:grid;gap:10px;margin:16px 0 20px}
+.sumtd div{display:flex;justify-content:space-between;color:var(--mut);font-size:.92rem;border-bottom:1px solid var(--line);padding-bottom:8px}
+.sumtd b{color:var(--txt)}
+.tdimg{border-radius:16px;overflow:hidden;aspect-ratio:16/9;margin-bottom:6px;position:relative}
+.tdimg img{width:100%;height:100%;object-fit:cover}
+
+/* visita */
+.visit{display:grid;grid-template-columns:1fr 1.3fr;gap:30px;margin-top:44px}
+.info{display:grid;gap:18px;align-content:start}
+.info div{border-top:1px solid var(--line);padding-top:16px}
+.info small{display:block;letter-spacing:.25em;font-weight:700;font-size:.68rem;color:var(--acc);text-transform:uppercase}
+.info b{font-family:var(--display);font-weight:400;font-size:1.15rem}
+.map{border-radius:var(--r);overflow:hidden;position:relative;min-height:440px;border:1px solid var(--line);background:#0b0d10}
+.map iframe{position:absolute;inset:0;width:100%;height:100%;border:0;filter:grayscale(1) invert(.92) contrast(.9)}
+.map .fake{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.05) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.05) 1px,transparent 1px);background-size:40px 40px}
+.map .fake::before{content:"";position:absolute;left:10%;right:20%;top:46%;height:6px;background:rgba(255,255,255,.12);transform:rotate(-12deg)}
+.map .fake::after{content:"";position:absolute;top:5%;bottom:10%;left:55%;width:6px;background:rgba(255,255,255,.12);transform:rotate(8deg)}
+.map .pin{position:absolute;left:52%;top:48%;transform:translate(-50%,-100%);text-align:center;z-index:2}
+.map .pin i{display:block;width:18px;height:18px;border-radius:50%;background:var(--acc);margin:0 auto;box-shadow:0 0 0 0 var(--acc);animation:pin 2s infinite}
+@keyframes pin{from{box-shadow:0 0 0 0 var(--acc)}to{box-shadow:0 0 0 26px transparent}}
+.map .pin b{display:block;margin-top:10px;font-family:var(--display);font-size:.8rem;letter-spacing:.2em;background:#000;padding:.4em .8em;border-radius:8px}
+.map .open{position:absolute;right:14px;bottom:14px;z-index:3}
+
+/* footer */
+footer{border-top:1px solid var(--line);padding:80px 0 30px;overflow:hidden}
+.big{font-family:var(--display);font-weight:800;font-size:clamp(5rem,22vw,19rem);line-height:.85;text-align:center;color:transparent;-webkit-text-stroke:1px rgba(255,255,255,.18);letter-spacing:.05em;white-space:nowrap}
+.fgrid{display:flex;justify-content:space-between;gap:20px;flex-wrap:wrap;margin-top:50px;color:var(--mut);font-size:.85rem}
+.fgrid a:hover{color:#fff}
+.legal{color:#5c6168;font-size:.75rem;margin-top:20px;max-width:900px}
+
+/* modal + toast */
+.modal{position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.8);backdrop-filter:blur(10px);display:flex;align-items:center;justify-content:center;padding:20px;opacity:0;visibility:hidden;transition:.4s}
+.modal.open{opacity:1;visibility:visible}
+.box{background:var(--bg2);border:1px solid var(--line);border-radius:26px;max-width:520px;width:100%;padding:40px 34px;text-align:center;position:relative;transform:translateY(30px);transition:.5s cubic-bezier(.2,.8,.2,1)}
+.modal.open .box{transform:none}
+.box h3{font-family:var(--display);font-weight:600;font-size:1.8rem;margin:8px 0}
+.box p{color:var(--mut)}
+.box .code{display:inline-block;font-family:var(--display);letter-spacing:.2em;border:1px dashed var(--acc);border-radius:12px;padding:.5em 1em;margin:16px 0}
+.x{position:absolute;right:14px;top:14px;width:42px;height:42px;border-radius:50%;border:1px solid var(--line);font-size:1.3rem}
+#confetti{position:fixed;inset:0;pointer-events:none;z-index:400}
+.toast{position:fixed;left:50%;bottom:24px;transform:translate(-50%,200px);background:#fff;color:#000;padding:13px 20px;border-radius:14px;font-weight:700;z-index:500;transition:transform .5s cubic-bezier(.2,.9,.3,1.3);max-width:90vw}
+.toast.show{transform:translate(-50%,0)}
+
+/* responsive */
+@media (max-width:1000px){
+  .under,.fin,.td,.visit,.wheel-s{grid-template-columns:1fr}
+  .thumbs{grid-template-columns:repeat(3,1fr)}
+  .stats{grid-template-columns:1fr 1fr}
+}
+@media (max-width:860px){
+  .burger{display:block;z-index:2}
+  .links{position:fixed;inset:0;height:100vh;height:100dvh;flex-direction:column;justify-content:center;gap:26px;background:rgba(6,7,8,.97);opacity:0;visibility:hidden;transition:.4s;font-family:var(--display);font-size:1.3rem}
+  .nav.open .links{opacity:1;visibility:visible}
+  .intro{height:260vh}
+  .gauge{right:50%;transform:translateX(50%) scale(.8);bottom:auto;top:84px}
+  .hint{bottom:26px}
+  .sec{padding:90px 0}
+  .stage{aspect-ratio:4/3}
+  .stage-info{left:16px;top:14px;max-width:70%}
+  .stage-nav{right:12px;top:auto;bottom:66px}
+  .stage-nav button{width:40px;height:40px}
+  .stage-nav span{display:none}
+  .callouts .co path,.callouts .co text.k,.callouts .co text.v{display:none}
+  .callist{display:grid;gap:8px;list-style:none;margin-top:14px;counter-reset:c}
+  .callist li{display:flex;gap:12px;align-items:center;border:1px solid var(--line);border-radius:12px;padding:10px 14px;font-size:.9rem}
+  .callist li::before{counter-increment:c;content:counter(c);width:24px;height:24px;flex:none;border-radius:50%;background:var(--acc);color:#000;font-weight:800;font-size:.8rem;display:grid;place-items:center}
+  .callist li span{color:var(--mut);font-size:.78rem;display:block}
+  .bars{grid-template-columns:1fr 1fr}
+  .cmp-grid{grid-template-columns:1fr 1fr;gap:12px}
+  .vs{display:none}
+  .specs{grid-template-columns:1fr}
+  .inside{height:200vh}
+  .inside .ov{background:linear-gradient(0deg,rgba(0,0,0,.92),rgba(0,0,0,.5) 60%,rgba(0,0,0,.2))}
+  .inside .stick{align-items:flex-end;padding-bottom:40px}
+  .pickc{grid-template-columns:repeat(2,minmax(0,1fr))}
+  .slots{grid-template-columns:repeat(2,minmax(0,1fr))}
+}
+@media (max-width:560px){
+  .thumbs{grid-template-columns:repeat(2,1fr)}
+  .tabs button{padding:.5em .8em;font-size:.66rem}
+}
+@media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
+</style>
+</head>
+<body class="lock">
+<div id="loader"><b>LUMEN</b><div class="bar"><i id="lbar"></i></div></div>
+<div class="cur" id="cur"></div><div class="ring" id="ring"></div>
+
+<header class="nav" id="nav"><div class="wrap">
+  <a href="#inicio" class="logo"><i></i>LUMEN</a>
+  <nav class="links" id="links">
+    <a href="#showroom">Showroom</a><a href="#comparar">Comparar</a><a href="#interior">Interior</a><a href="#financiar">Financiación</a><a href="#visita">Visítanos</a>
+    <a href="#prueba" class="btn btn-acc">Prueba de conducción</a>
+  </nav>
+  <button class="burger" id="burger" aria-label="Menú"><span></span><span></span></button>
+</div></header>
+
+<!-- INTRO: se encienden las luces -->
+<section class="intro" id="inicio"><div class="stick" id="introStick">
+  <video id="vid" muted playsinline preload="auto" poster="media/intro-poster.jpg"></video>
+  <canvas id="seq"></canvas>
+  <img class="still" id="still0" src="media/showroom-oscuro.jpg" alt="" style="opacity:1">
+  <img class="still" id="still" src="media/corvette.jpg" alt="Chevrolet Corvette Z06 rojo en el showroom de LUMEN">
+  <div class="shade"></div>
+  <div class="lA" id="lA"><h1 id="logoBig">LUMEN</h1><small>PERFORMANCE CARS · MADRID</small></div>
+  <div class="lB" id="lB">
+    <span class="eyebrow">Showroom de deportivos</span>
+    <h2 id="heroT">Deportivos que encienden la noche</h2>
+    <p>Seis máquinas seleccionadas, revisadas y listas para salir del showroom. Ven a verlas con las luces encendidas.</p>
+    <div class="cta"><a href="#showroom" class="btn btn-line">Ver showroom</a><a href="#prueba" class="btn btn-acc">Reservar prueba</a></div>
+  </div>
+  <div class="hint" id="hint">DESLIZA PARA ENCENDER<i></i></div>
+  <div class="gauge" id="gauge"><svg viewBox="-75 -75 150 110"><path d="M-60 30 A65 65 0 1 1 60 30" fill="none" stroke="rgba(255,255,255,.15)" stroke-width="4" stroke-linecap="round"/><path id="garc" d="M-60 30 A65 65 0 1 1 60 30" fill="none" stroke="var(--acc)" stroke-width="4" stroke-linecap="round" pathLength="100" stroke-dasharray="100" stroke-dashoffset="100"/><line id="needle" x1="0" y1="0" x2="0" y2="-52" stroke="#fff" stroke-width="2" stroke-linecap="round" transform="rotate(-133)"/><circle r="4" fill="#fff"/></svg><b id="kmh">0</b><small>KM/H</small></div>
+  <div class="iprog" id="iprog"></div>
+</div></section>
+
+<div class="marq" aria-hidden="true"><div id="marq"></div></div>
+
+<!-- MANIFIESTO -->
+<section class="sec" id="lumen"><div class="wrap">
+  <span class="eyebrow reveal">LUMEN · Performance Cars</span>
+  <p class="statement" id="statement" style="margin-top:20px">Un showroom a oscuras en Madrid. Seis deportivos esperando a que se enciendan las luces. Aquí no se viene a comprar un coche: se viene a sentirlo.</p>
+  <div class="stats">
+    <div class="reveal"><b data-count="6">0</b><span>modelos en exposición</span></div>
+    <div class="reveal" style="--d:.1s"><b data-count="3406">0</b><span>CV en total</span></div>
+    <div class="reveal" style="--d:.2s"><b data-count="28" data-div="10" data-suf=" s">0</b><span>mejor 0-100 km/h</span></div>
+    <div class="reveal" style="--d:.3s"><b data-count="315">0</b><span>km/h de punta</span></div>
+  </div>
+</div></section>
+
+<!-- SHOWROOM -->
+<section class="sec" id="showroom" style="padding-top:60px"><div class="wrap">
+  <div class="show-head reveal">
+    <div><span class="eyebrow">Showroom</span><h2 class="h2">Elige tu <em>máquina</em></h2></div>
+    <div class="chips" id="chips"><button data-f="all" class="on">Todos</button><button data-f="deportivo">Deportivos</button><button data-f="suv">SUV</button><button data-f="berlina">Berlinas</button></div>
+  </div>
+  <div class="stage reveal" id="stage">
+    <div class="tilt" id="tilt"><div id="phs"></div><svg class="callouts" id="callouts" viewBox="0 0 1376 768" preserveAspectRatio="xMidYMid slice"></svg></div>
+    <div class="sweep" id="sweep"></div>
+    <div class="stage-info"><div class="brand" id="sBrand"></div><h3 id="sName"></h3><div class="meta" id="sMeta"></div></div>
+    <div class="stage-nav"><button id="prev" aria-label="Anterior">←</button><span id="sCount">01 / 06</span><button id="next" aria-label="Siguiente">→</button></div>
+    <div class="tabs" id="tabs"><button data-t="perf" class="on">Rendimiento</button><button data-t="ext">Exterior</button><button data-t="equip">Equipamiento</button></div>
+  </div>
+  <ul class="callist" id="callist"></ul>
+  <div class="under">
+    <div class="bars" id="bars"></div>
+    <div class="buy"><div><small>Desde</small><b id="sPrice"></b></div><div class="acts"><a href="#financiar" class="btn btn-line" id="toFin">Financiar</a><a href="#prueba" class="btn btn-acc" id="toTd">Probar</a></div></div>
+  </div>
+  <div class="thumbs" id="thumbs"></div>
+  <p class="note">Datos técnicos y precios orientativos. Pasa el ratón por la foto para inclinarla.</p>
+</div></section>
+
+<!-- COMPARADOR -->
+<section class="sec" id="comparar" style="background:var(--bg2)"><div class="wrap">
+  <div class="reveal"><span class="eyebrow">Comparador</span><h2 class="h2">Cara <em>a cara</em></h2><p class="lead">Elige dos coches y mira cuál gana en cada dato.</p></div>
+  <div class="cmp-grid reveal">
+    <div class="cmp-side"><select id="cA"></select><img id="iA" alt=""></div>
+    <div class="vs">VS</div>
+    <div class="cmp-side"><select id="cB"></select><img id="iB" alt=""></div>
+  </div>
+  <div class="cmp-rows" id="cmpRows"></div>
+</div></section>
+
+<!-- INTERIOR -->
+<section class="inside" id="interior"><div class="stick">
+  <img id="inImg" src="media/interior.jpg" alt="Interior deportivo con asientos de carbono y pantallas digitales" loading="lazy">
+  <div class="ov"></div>
+  <div class="txt"><div>
+    <span class="eyebrow">Interior</span><h2 class="h2">Siéntate <em>dentro</em></h2>
+    <p class="lead" style="color:#c4c8ce">Cuero, Alcantara y fibra de carbono. Cada coche se entrega revisado, limpio a fondo y con el depósito lleno.</p>
+    <ul id="inList"><li><b>01</b>Asientos baquet con costuras a contraste</li><li><b>02</b>Volante de Alcantara con levas</li><li><b>03</b>Cuadro digital y modos de conducción</li><li><b>04</b>Iluminación ambiental configurable</li></ul>
+  </div></div>
+</div></section>
+
+<!-- LLANTA -->
+<section class="sec" id="detalle"><div class="wrap wheel-s">
+  <div class="reveal"><span class="eyebrow">Al detalle</span><h2 class="h2">Hecho para <em>girar</em></h2><p class="lead">Haz scroll y la llanta gira contigo. Frenos grandes, llantas forjadas y neumáticos de alto rendimiento: lo que no se ve en una ficha también cuenta.</p>
+    <ul class="specs"><li><b>Hasta 21"</b><span>Llantas forjadas ligeras</span></li><li><b>Carbocerámicos</b><span>Frenos disponibles en varios modelos</span></li><li><b>Inspección 150 puntos</b><span>Antes de cada entrega</span></li><li><b>2 años</b><span>Garantía LUMEN</span></li></ul>
+  </div>
+  <div class="wheel-wrap reveal" id="wheelWrap" data-rpm="0 RPM"><div class="wheel" id="wheel"><img src="media/llanta.jpg" alt="Llanta negra con pinza de freno roja" id="wImg"></div></div>
+</div></section>
+
+<!-- FINANCIACIÓN -->
+<section class="sec" id="financiar" style="background:var(--bg2)"><div class="wrap">
+  <div class="reveal"><span class="eyebrow">Financiación</span><h2 class="h2">Tu cuota, <em>al momento</em></h2><p class="lead">Mueve los controles y mira cómo cambia la cuota mensual.</p></div>
+  <div class="fin">
+    <div class="panel reveal">
+      <div class="field"><label>Coche</label><select id="fCar"></select></div>
+      <div class="field"><label>Entrada <b id="fEntV"></b></label><input type="range" id="fEnt" min="0" max="50" step="5" value="20"></div>
+      <div class="field"><label>Plazo <b id="fPlzV"></b></label><input type="range" id="fPlz" min="24" max="96" step="12" value="60"></div>
+      <div class="field" style="margin-bottom:0"><label>Tipo de interés (TIN) <b>6,49 %</b></label><p class="note" style="margin:0">Simulación orientativa con un tipo fijo de ejemplo. No es una oferta de financiación real.</p></div>
+    </div>
+    <div class="panel quote reveal" style="--d:.1s">
+      <small>CUOTA MENSUAL</small><div class="qbig"><span id="fQ">0</span> € <em>/mes</em></div>
+      <ul><li>Precio del coche <b id="fP"></b></li><li>Entrada <b id="fE"></b></li><li>Importe financiado <b id="fF"></b></li><li>Total a pagar <b id="fT"></b></li></ul>
+    </div>
+  </div>
+</div></section>
+
+<!-- PRUEBA DE CONDUCCIÓN -->
+<section class="sec" id="prueba"><div class="wrap">
+  <div class="reveal"><span class="eyebrow">Prueba de conducción</span><h2 class="h2">Siente <em>el motor</em></h2><p class="lead">Elige coche, día y hora. Te esperamos con el coche arrancado.</p></div>
+  <div class="td">
+    <div class="panel reveal">
+      <div class="pickc" id="pickc"></div>
+      <div class="calh"><button id="pM" aria-label="Mes anterior">‹</button><b id="calT"></b><button id="nM" aria-label="Mes siguiente">›</button></div>
+      <div class="cal" id="cal"></div>
+      <div class="slots" id="slots"></div>
+    </div>
+    <div class="panel reveal" style="--d:.1s">
+      <div class="tdimg"><img id="tdImg" alt=""></div>
+      <div class="sumtd"><div>Coche <b id="tdCar"></b></div><div>Día <b id="tdDay">—</b></div><div>Hora <b id="tdHour">—</b></div><div>Duración <b>45 min</b></div></div>
+      <form class="form" id="tdForm"><input id="tdN" placeholder="Nombre" required><input id="tdE" type="email" placeholder="Email" required><input id="tdT" type="tel" placeholder="Teléfono" required>
+      <button class="btn btn-acc" id="tdBtn" disabled type="submit">Reservar prueba</button></form>
+      <p class="note">Reserva simulada: es una web de demostración.</p>
+    </div>
+  </div>
+</div></section>
+
+<!-- VISÍTANOS -->
+<section class="sec" id="visita" style="background:var(--bg2)"><div class="wrap">
+  <div class="reveal"><span class="eyebrow">Visítanos</span><h2 class="h2">El showroom, <em>en Madrid</em></h2></div>
+  <div class="visit">
+    <div class="info reveal">
+      <div><small>Dirección</small><b>Paseo de la Castellana · Cuatro Torres, 28046 Madrid</b><span class="note" style="display:block;margin-top:4px">Ubicación ficticia de ejemplo</span></div>
+      <div><small>Horario</small><b>L-V 10:00–20:00 · S 10:00–14:00</b></div>
+      <div><small>Teléfono</small><b>+34 910 000 000</b></div>
+      <div><small>Email</small><b>hola@lumen-cars.com</b></div>
+    </div>
+    <div class="map reveal" id="map"><a class="btn btn-acc open" href="https://www.google.com/maps/search/Cuatro+Torres+Business+Area+Madrid" target="_blank" rel="noopener">Abrir en Google Maps ↗</a></div>
+  </div>
+</div></section>
+
+<footer><div class="big">LUMEN</div><div class="wrap">
+  <div class="fgrid"><span>© <span id="yr"></span> LUMEN Performance Cars · Web ficticia de portfolio</span><span>Diseño y desarrollo: Sergio Pérez</span><span><a href="#showroom">Showroom</a> · <a href="#prueba">Prueba</a> · <a href="#visita">Contacto</a></span></div>
+  <p class="legal">LUMEN es un concesionario inventado para un proyecto de portfolio: no es un concesionario oficial ni tiene relación con ninguna marca. Los nombres de marcas y modelos pertenecen a sus propietarios. Imágenes generadas con IA. Datos técnicos y precios orientativos.</p>
+</div></footer>
+
+<div class="modal" id="conf"><div class="box"><button class="x" data-close aria-label="Cerrar">×</button><span class="eyebrow">Prueba reservada</span><h3>¡Arrancamos!</h3><p id="confT"></p><div class="code" id="confC"></div><p>Reserva simulada: no se ha enviado nada.</p><button class="btn btn-acc" data-close style="margin-top:18px">Genial</button></div></div>
+<canvas id="confetti"></canvas>
+<div class="toast" id="toast"></div>
+
+<script>
+const $=s=>document.querySelector(s),$$=s=>[...document.querySelectorAll(s)];
+const clamp=(v,a=0,b=1)=>Math.min(b,Math.max(a,v));
+const EUR=new Intl.NumberFormat('es-ES',{style:'currency',currency:'EUR',maximumFractionDigits:0});
+const NUM=new Intl.NumberFormat('es-ES');
+function rng(s){return()=>{s|=0;s=s+0x6D2B79F5|0;let t=Math.imul(s^s>>>15,1|s);t=t+Math.imul(t^t>>>7,61|t)^t;return((t^t>>>14)>>>0)/4294967296}}
+
+/* ============ DATOS (orientativos) ============ */
+const CARS=[
+ {id:'corvette',brand:'Chevrolet',name:'Corvette Z06',type:'deportivo',acc:'#ff2a1a',color:'Rojo Torch',price:175000,cv:679,nm:623,acc100:2.8,vmax:304,engine:'V8 5.5 L atmosférico',drive:'Propulsión · 2 plazas',
+  pts:{light:[880,372],front:[1000,445],wheelF:[760,440],wheelR:[370,425],cabin:[700,300],side:[480,345],rear:[330,302]},
+  co:{perf:[['side','MOTOR CENTRAL','V8 5.5 L · 679 CV'],['wheelF','FRENOS','Carbocerámicos'],['rear','0-100 KM/H','2,8 s']],
+      ext:[['light','FAROS','LED'],['wheelR','LLANTAS','20" / 21"'],['front','AERODINÁMICA','Splitter de carbono']],
+      equip:[['cabin','HABITÁCULO','2 plazas · techo targa'],['side','CAMBIO','Doble embrague 8 vel.'],['wheelF','NEUMÁTICOS','Alto rendimiento']]}},
+ {id:'macan',brand:'Porsche',name:'Macan GTS',type:'suv',acc:'#e9e9e9',color:'Blanco Crayon',price:105000,cv:440,nm:550,acc100:4.3,vmax:272,engine:'V6 2.9 L biturbo',drive:'Tracción total · 5 plazas',
+  pts:{light:[880,350],front:[1005,390],wheelF:[760,455],wheelR:[405,440],cabin:[680,285],side:[560,395],rear:[375,330]},
+  co:{perf:[['front','MOTOR','V6 biturbo · 440 CV'],['wheelF','FRENOS','Pinzas rojas de 6 pistones'],['rear','0-100 KM/H','4,3 s']],
+      ext:[['light','FAROS','LED matriciales'],['wheelR','LLANTAS','21" negras'],['side','CARROCERÍA','Paquete GTS']],
+      equip:[['cabin','INTERIOR','5 plazas · Race-Tex'],['side','TRACCIÓN','Total · PDK 7 vel.'],['rear','MALETERO','Portón eléctrico']]}},
+ {id:'mustang',brand:'Ford',name:'Mustang Dark Horse',type:'deportivo',acc:'#3d6bff',color:'Azul metalizado',price:82000,cv:500,nm:567,acc100:4.4,vmax:270,engine:'V8 5.0 L atmosférico',drive:'Propulsión · 4 plazas',
+  pts:{light:[865,352],front:[1000,390],wheelF:[725,452],wheelR:[395,440],cabin:[660,280],side:[950,300],rear:[360,305]},
+  co:{perf:[['side','MOTOR','V8 5.0 L · ≈500 CV'],['wheelF','FRENOS','Pinzas Brembo de 6 pistones'],['rear','0-100 KM/H','≈4,4 s']],
+      ext:[['light','FAROS','LED de tres barras'],['wheelR','LLANTAS','19" negras'],['rear','ALERÓN','Trasero fijo']],
+      equip:[['cabin','INTERIOR','4 plazas · baquets'],['front','SONIDO','Escape activo'],['wheelF','CAMBIO','Manual 6 vel. o automático']]}},
+ {id:'xm',brand:'BMW M',name:'XM Label',type:'suv',acc:'#ff4d57',color:'Gris mate · Rojo',price:205000,cv:748,nm:1000,acc100:3.8,vmax:290,engine:'V8 4.4 L biturbo + eléctrico',drive:'Tracción total · híbrido enchufable',
+  pts:{light:[850,345],front:[980,375],wheelF:[705,470],wheelR:[390,440],cabin:[660,240],side:[520,300],rear:[380,300]},
+  co:{perf:[['front','SISTEMA HÍBRIDO','748 CV · 1.000 Nm'],['wheelF','FRENOS','M Compound'],['rear','0-100 KM/H','3,8 s']],
+      ext:[['front','PARRILLA','Riñones iluminados'],['side','DETALLES','Acentos rojos Label'],['wheelR','LLANTAS','23" con detalles rojos']],
+      equip:[['cabin','INTERIOR','Lounge trasero'],['side','AUTONOMÍA','Modo 100 % eléctrico'],['wheelF','TRACCIÓN','M xDrive']]}},
+ {id:'rs3',brand:'Audi Sport',name:'RS 3 Sedan',type:'berlina',acc:'#22c55e',color:'Verde Kyalami',price:76000,cv:400,nm:500,acc100:3.8,vmax:290,engine:'5 cilindros 2.5 TFSI',drive:'Tracción quattro · 5 plazas',
+  pts:{light:[850,368],front:[1000,395],wheelF:[720,460],wheelR:[405,435],cabin:[650,265],side:[560,370],rear:[385,290]},
+  co:{perf:[['front','MOTOR','5 cilindros · 400 CV'],['wheelF','FRENOS','Pinzas rojas RS'],['rear','0-100 KM/H','3,8 s']],
+      ext:[['light','FAROS','Matrix LED'],['front','PARRILLA','Panal negro RS'],['wheelR','LLANTAS','19" negras']],
+      equip:[['cabin','INTERIOR','Asientos RS con panal'],['side','TRACCIÓN','quattro con RS Torque Splitter'],['rear','MODO','RS Torque Rear']]}},
+ {id:'amg',brand:'Mercedes-AMG',name:'GT 63 S 4 puertas',type:'berlina',acc:'#ffd400',color:'Amarillo',price:195000,cv:639,nm:900,acc100:3.2,vmax:315,engine:'V8 4.0 L biturbo',drive:'Tracción 4MATIC+ · 4 plazas',
+  pts:{light:[860,368],front:[1010,392],wheelF:[720,455],wheelR:[405,435],cabin:[650,262],side:[560,375],rear:[385,300]},
+  co:{perf:[['front','MOTOR','V8 biturbo · 639 CV'],['wheelF','FRENOS','Cerámicos opcionales'],['rear','V. MÁXIMA','315 km/h']],
+      ext:[['front','PARRILLA','Panamericana AMG'],['light','FAROS','Multibeam LED'],['wheelR','LLANTAS','21" forjadas']],
+      equip:[['cabin','INTERIOR','4 plazas · Alcantara'],['side','CAMBIO','AMG Speedshift 9 vel.'],['rear','ALERÓN','Activo']]}}
+];
+const TYPES={deportivo:'Deportivo',suv:'SUV',berlina:'Berlina'};
+
+/* ============ LOADER ============ */
+let lp=0;const lt=setInterval(()=>{lp=Math.min(lp+Math.random()*14,92);$('#lbar').style.width=lp+'%';},160);
+function hideLoader(){clearInterval(lt);$('#lbar').style.width='100%';setTimeout(()=>{$('#loader').classList.add('hide');document.body.classList.remove('lock');},400);}
+setTimeout(hideLoader,4500);
+
+/* ============ ACENTO (color del coche) ============ */
+function setAcc(c){document.documentElement.style.setProperty('--acc',c);}
+
+/* ============ CURSOR ============ */
+(function(){if(!matchMedia('(hover:hover) and (pointer:fine)').matches)return;const c=$('#cur'),r=$('#ring');let mx=0,my=0,rx=0,ry=0;
+ addEventListener('mousemove',e=>{mx=e.clientX;my=e.clientY;c.style.transform=`translate(${mx}px,${my}px) translate(-50%,-50%)`;});
+ (function f(){rx+=(mx-rx)*.15;ry+=(my-ry)*.15;r.style.transform=`translate(${rx}px,${ry}px) translate(-50%,-50%)`;requestAnimationFrame(f);})();
+ document.addEventListener('mouseover',e=>r.classList.toggle('hov',!!e.target.closest('a,button,select,input')));})();
+
+/* ============ INTRO ============ */
+$('#hint').addEventListener('animationend',e=>e.currentTarget.style.animation='none');
+const vid=$('#vid'),seqC=$('#seq'),seqX=seqC.getContext('2d'),still=$('#still'),intro=$('#inicio');
+$('#logoBig').innerHTML=[...'LUMEN'].map((l,i)=>`<span style="animation-delay:${.5+i*.18}s">${l}</span>`).join('');
+$('#heroT').innerHTML=$('#heroT').textContent.split(' ').map((w,i)=>`<span class="w"><span style="transition-delay:${(i*.08).toFixed(2)}s">${w}</span></span>`).join(' ');
+const USE_SEQ=matchMedia('(hover:none),(pointer:coarse),(max-width:900px)').matches;
+const N=81,seqImgs=[];let seqI=0,seqT=0,drawn=-1,vidOK=true,vt=0,vtT=0;
+function sizeSeq(){const d=Math.min(devicePixelRatio||1,2);seqC.width=seqC.clientWidth*d;seqC.height=seqC.clientHeight*d;drawn=-1;}
+function drawSeq(i){let k=i;while(k>0&&!seqImgs[k])k--;const im=seqImgs[k];if(!im||k===drawn)return;drawn=k;const W=seqC.width,H=seqC.height,s=Math.max(W/im.width,H/im.height),w=im.width*s,h=im.height*s;seqX.drawImage(im,(W-w)*.55,(H-h)/2,w,h);}
+function startSeq(){$('#introStick').classList.add('useSeq');vid.removeAttribute('src');
+ const load=i=>new Promise(r=>{const im=new Image();im.onload=()=>{seqImgs[i]=im;r();};im.onerror=r;im.src=`media/seq/f${String(i+1).padStart(3,'0')}.jpg`;});
+ load(0).then(()=>{sizeSeq();drawSeq(0);hideLoader();(async()=>{for(let i=1;i<N;i++)await load(i);})();});}
+if(USE_SEQ)startSeq();
+else{vid.addEventListener('loadeddata',hideLoader,{once:true});vid.addEventListener('error',()=>{vidOK=false;startSeq();},{once:true});vid.src='media/intro.mp4';}
+function updIntro(){const r=intro.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));
+ $('#lA').style.opacity=1-clamp(p/.15);$('#lA').style.transform=`scale(${1+p*.4})`;$('#hint').style.opacity=1-clamp(p/.06);
+ const q=clamp(p/.85);if(USE_SEQ||!vidOK)seqT=q*(N-1);else vtT=q*(vid.duration||5);
+ still.style.opacity=clamp((p-.86)/.08);$('#still0').style.opacity=1-clamp(p/.07);
+ const kmh=Math.round(q*300);$('#kmh').textContent=kmh;$('#needle').setAttribute('transform',`rotate(${-133+q*266})`);$('#garc').setAttribute('stroke-dashoffset',100-q*100);
+ $('#gauge').style.opacity=1-clamp((p-.88)/.06);
+ $('#iprog').style.width=p*100+'%';$('#lB').classList.toggle('show',p>.88);}
+(function loop(){if(USE_SEQ||!vidOK){seqI+=(seqT-seqI)*.18;drawSeq(Math.round(seqI));}else if(vid.readyState>=1){vt+=(vtT-vt)*.12;if(Math.abs(vid.currentTime-vt)>.015){try{vid.currentTime=vt;}catch(e){}}}requestAnimationFrame(loop);})();
+
+/* ============ MARQUEE + MANIFIESTO ============ */
+(function(){const s=CARS.map(c=>`<span>${c.brand} ${c.name}</span>`).join('');$('#marq').innerHTML=s+s;})();
+const st=$('#statement');st.innerHTML=st.textContent.split(' ').map(w=>`<span>${w}</span>`).join(' ');const sw=$$('#statement span');
+function updSt(){const r=st.getBoundingClientRect(),p=clamp((innerHeight*.85-r.top)/(r.height+innerHeight*.35)),n=Math.round(p*sw.length);sw.forEach((w,i)=>w.classList.toggle('on',i<n));}
+
+/* ============ SHOWROOM ============ */
+let cur=0,tab='perf',filter='all';
+$('#thumbs').innerHTML=CARS.map((c,i)=>`<button data-i="${i}" style="--c:${c.acc}"><img src="media/${c.id}-thumb.jpg" alt="${c.brand} ${c.name}"><div>${c.name}<small>${TYPES[c.type]} · ${NUM.format(c.cv)} CV</small></div></button>`).join('');
+$$('#thumbs button').forEach(b=>b.onclick=()=>showCar(+b.dataset.i));
+function visible(){return CARS.map((c,i)=>i).filter(i=>filter==='all'||CARS[i].type===filter);}
+$$('#chips button').forEach(b=>b.onclick=()=>{filter=b.dataset.f;$$('#chips button').forEach(x=>x.classList.toggle('on',x===b));$$('#thumbs button').forEach(t=>t.classList.toggle('hide',!visible().includes(+t.dataset.i)));if(!visible().includes(cur))showCar(visible()[0]);});
+function step(d){const v=visible(),k=v.indexOf(cur);showCar(v[(k+d+v.length)%v.length]);}
+$('#prev').onclick=()=>step(-1);$('#next').onclick=()=>step(1);
+document.addEventListener('keydown',e=>{const r=$('#stage').getBoundingClientRect();if(r.top<innerHeight&&r.bottom>0){if(e.key==='ArrowRight')step(1);if(e.key==='ArrowLeft')step(-1);}});
+(function(){let x0=null;const s=$('#stage');s.addEventListener('touchstart',e=>x0=e.touches[0].clientX,{passive:true});s.addEventListener('touchend',e=>{if(x0==null)return;const dx=e.changedTouches[0].clientX-x0;if(Math.abs(dx)>45)step(dx<0?1:-1);x0=null;});})();
+$$('#tabs button').forEach(b=>b.onclick=()=>{tab=b.dataset.t;$$('#tabs button').forEach(x=>x.classList.toggle('on',x===b));drawCallouts();});
+function drawCallouts(){const c=CARS[cur],svg=$('#callouts');let s='';
+ c.co[tab].forEach(([k,lab,val],i)=>{const [x,y]=c.pts[k];const right=x>640;const ly=right?Math.max(y-130,150):Math.min(y+165,640);const ex=right?Math.min(x+170,1250):Math.max(x-190,120);const mx=right?x+50:x-50;
+  const d=`M${x} ${y} L${mx} ${ly} L${ex} ${ly}`;const len=Math.hypot(mx-x,ly-y)+Math.abs(ex-mx);const ta=right?'end':'start';
+  s+=`<g class="co" style="--len:${len.toFixed(0)};--dl:${(i*.25).toFixed(2)}s"><path d="${d}"/><circle class="halo" cx="${x}" cy="${y}" r="12"/><circle class="p" cx="${x}" cy="${y}" r="12"/><text class="num" x="${x}" y="${y+5.5}" text-anchor="middle">${i+1}</text><text class="k" x="${ex}" y="${ly-34}" text-anchor="${ta}">${lab}</text><text class="v" x="${ex}" y="${ly-10}" text-anchor="${ta}">${val}</text></g>`;});
+ svg.innerHTML=s;requestAnimationFrame(()=>requestAnimationFrame(()=>$$('#callouts .co').forEach(g=>g.classList.add('on','n'))));
+ $('#callist').innerHTML=c.co[tab].map(([k,lab,val])=>`<li><div><span>${lab}</span>${val}</div></li>`).join('');}
+function showCar(i,first){cur=i;const c=CARS[i];setAcc(c.acc);
+ const box=$('#phs');const old=box.querySelector('.ph');if(old&&!first){old.classList.add('old');setTimeout(()=>old.remove(),800);}
+ box.insertAdjacentHTML('beforeend',`<div class="ph ${first?'':'new'}"><img src="media/${c.id}.jpg" alt="${c.brand} ${c.name} en el showroom"></div>`);
+ if(!first){const sw=$('#sweep');sw.classList.remove('go');void sw.offsetWidth;sw.classList.add('go');}
+ $('#sBrand').textContent=c.brand;$('#sName').textContent=c.name;$('#sMeta').textContent=`${c.engine} · ${c.color}`;
+ const v=visible();$('#sCount').textContent=String(v.indexOf(i)+1).padStart(2,'0')+' / '+String(v.length).padStart(2,'0');
+ $('#sPrice').textContent=EUR.format(c.price);
+ $('#bars').innerHTML=[[c.cv,'CV','Potencia',c.cv/800],[c.nm,'Nm','Par',c.nm/1000],[c.acc100,'s','0-100 km/h',(6-c.acc100)/4],[c.vmax,'km/h','V. máxima',c.vmax/330]].map(([v,u,l,w])=>`<div class="bar"><span>${l}</span><b data-v="${v}">0<small>${u}</small></b><i style="--w:0%" data-w="${(w*100).toFixed(0)}"></i></div>`).join('');
+ requestAnimationFrame(()=>$$('#bars .bar').forEach(b=>{const i=b.querySelector('i');i.style.setProperty('--w',i.dataset.w+'%');const bb=b.querySelector('b'),to=+bb.dataset.v,u=bb.querySelector('small').outerHTML,t0=performance.now(),dec=to%1!==0;
+  (function f(t){const k=Math.min(1,(t-t0)/1100),e=1-Math.pow(1-k,3),val=to*e;bb.innerHTML=(dec?val.toFixed(1).replace('.',','):NUM.format(Math.round(val)))+u;if(k<1)requestAnimationFrame(f);})(t0);}));
+ $$('#thumbs button').forEach(b=>b.classList.toggle('on',+b.dataset.i===i));
+ drawCallouts();}
+$('#toFin').onclick=()=>{$('#fCar').value=cur;updFin();};
+$('#toTd').onclick=()=>selTd(cur);
+// inclinación 3D
+(function(){if(!matchMedia('(hover:hover)').matches)return;const s=$('#stage'),t=$('#tilt');
+ s.addEventListener('mousemove',e=>{const r=s.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;t.style.transform=`perspective(1400px) rotateY(${x*6}deg) rotateX(${-y*4}deg) scale(1.03)`;});
+ s.addEventListener('mouseleave',()=>t.style.transform='');})();
+
+/* ============ COMPARADOR ============ */
+const opts=CARS.map((c,i)=>`<option value="${i}">${c.brand} ${c.name}</option>`).join('');$('#cA').innerHTML=opts;$('#cB').innerHTML=opts;$('#cA').value=0;$('#cB').value=3;
+function updCmp(){const a=CARS[$('#cA').value],b=CARS[$('#cB').value];$('#iA').src=`media/${a.id}-thumb.jpg`;$('#iB').src=`media/${b.id}-thumb.jpg`;
+ const rows=[['Potencia','cv',' CV',1],['Par','nm',' Nm',1],['0-100 km/h','acc100',' s',-1],['Velocidad máxima','vmax',' km/h',1],['Precio','price',' €',-1]];
+ $('#cmpRows').innerHTML=rows.map(([l,k,u,dir])=>{const va=a[k],vb=b[k],mx=Math.max(va,vb),f=v=>k==='price'?NUM.format(v):(v%1?String(v).replace('.',','):NUM.format(v));
+  const wa=dir>0?va/mx:Math.min(va,vb)/va,wb=dir>0?vb/mx:Math.min(va,vb)/vb;const winA=dir>0?va>vb:va<vb,winB=dir>0?vb>va:vb<va;
+  return `<div class="crow"><div class="lab">${l}</div><div class="cols"><div class="cb l ${winA?'win':''}" style="--c:${a.acc}"><i style="--w:0%" data-w="${(wa*100).toFixed(0)}"></i><span>${f(va)}${u}</span><span class="w">MEJOR</span></div><div class="cb ${winB?'win':''}" style="--c:${b.acc}"><i style="--w:0%" data-w="${(wb*100).toFixed(0)}"></i><span>${f(vb)}${u}</span><span class="w">MEJOR</span></div></div></div>`;}).join('');
+ requestAnimationFrame(()=>requestAnimationFrame(()=>$$('#cmpRows i').forEach(i=>i.style.setProperty('--w',i.dataset.w+'%'))));}
+$('#cA').onchange=updCmp;$('#cB').onchange=updCmp;
+
+/* ============ LLANTA ============ */
+function placeWheel(){const W=$('#wheel').clientWidth,R=330,cx=688,cy=392,s=W/(2*R),im=$('#wImg');im.style.width=1376*s+'px';im.style.left=(W/2-cx*s)+'px';im.style.top=(W/2-cy*s)+'px';}
+let lastY=scrollY,rot=0,rpm=0;
+function updWheel(){const dy=scrollY-lastY;lastY=scrollY;rot+=dy*.35;rpm+=(Math.abs(dy)*60-rpm)*.1;$('#wheel').style.transform=`rotate(${rot}deg)`;$('#wheelWrap').dataset.rpm=Math.round(rpm)+' RPM';}
+
+/* ============ INTERIOR (zoom) ============ */
+function updInside(){const s=$('#interior'),r=s.getBoundingClientRect(),p=clamp(-r.top/(r.height-innerHeight));if(r.bottom<0||r.top>innerHeight)return;
+ $('#inImg').style.transform=`scale(${1+p*.45})`;$$('#inList li').forEach((li,i)=>li.classList.toggle('in',p>.12+i*.12));}
+
+/* ============ FINANCIACIÓN ============ */
+$('#fCar').innerHTML=opts;
+function pct(el){el.style.setProperty('--p',((el.value-el.min)/(el.max-el.min)*100)+'%');}
+let lastQ=0;
+function updFin(){const c=CARS[$('#fCar').value],ent=+$('#fEnt').value/100,n=+$('#fPlz').value,P=c.price,E=Math.round(P*ent),F=P-E,i=.0649/12,q=F*i/(1-Math.pow(1+i,-n));
+ $('#fEntV').textContent=`${Math.round(ent*100)} %`;$('#fPlzV').textContent=`${n} meses`;[$('#fEnt'),$('#fPlz')].forEach(pct);
+ $('#fP').textContent=EUR.format(P);$('#fE').textContent=EUR.format(E);$('#fF').textContent=EUR.format(F);$('#fT').textContent=EUR.format(Math.round(q*n+E));
+ const el=$('#fQ'),a=lastQ,b=Math.round(q),t0=performance.now();lastQ=b;(function f(t){const k=Math.min(1,(t-t0)/500);el.textContent=NUM.format(Math.round(a+(b-a)*(1-Math.pow(1-k,3))));if(k<1)requestAnimationFrame(f);})(t0);}
+['#fCar','#fEnt','#fPlz'].forEach(s=>$(s).addEventListener('input',updFin));
+
+/* ============ PRUEBA DE CONDUCCIÓN ============ */
+const today=new Date();today.setHours(0,0,0,0);
+const TD={car:0,day:null,hour:null,view:new Date(today.getFullYear(),today.getMonth(),1)};
+const HOURS=['10:00','12:00','17:00','19:00'];
+$('#pickc').innerHTML=CARS.map((c,i)=>`<button data-i="${i}" style="--c:${c.acc}"><img src="media/${c.id}-thumb.jpg" alt=""><span>${c.name}</span></button>`).join('');
+$$('#pickc button').forEach(b=>b.onclick=()=>selTd(+b.dataset.i));
+function busy(d,h,car){const r=rng(d.getFullYear()*1000+d.getMonth()*40+d.getDate()+h*7+car*131);return r()<.35;}
+function selTd(i){TD.car=i;$$('#pickc button').forEach((b,j)=>b.classList.toggle('on',j===i));const c=CARS[i];$('#tdImg').src=`media/${c.id}-thumb.jpg`;$('#tdCar').textContent=c.name;if(TD.day&&TD.hour!=null&&busy(TD.day,TD.hour,i))TD.hour=null;drawSlots();updTd();}
+function drawCal(){const v=TD.view,y=v.getFullYear(),m=v.getMonth(),t=v.toLocaleDateString('es-ES',{month:'long',year:'numeric'});$('#calT').textContent=t[0].toUpperCase()+t.slice(1);
+ $('#pM').disabled=y===today.getFullYear()&&m===today.getMonth();$('#nM').disabled=(y-today.getFullYear())*12+m-today.getMonth()>=2;
+ let h=['L','M','X','J','V','S','D'].map(d=>`<div class="wd">${d}</div>`).join('');const f=(new Date(y,m,1).getDay()+6)%7,n=new Date(y,m+1,0).getDate();
+ for(let i=0;i<f;i++)h+='<div class="day empty"></div>';
+ for(let d=1;d<=n;d++){const dt=new Date(y,m,d),off=dt<=today||dt.getDay()===0;h+=`<button class="day${TD.day&&+TD.day===+dt?' on':''}" data-d="${d}" ${off?'disabled':''}>${d}</button>`;}
+ $('#cal').innerHTML=h;$$('#cal .day[data-d]').forEach(b=>b.onclick=()=>{TD.day=new Date(y,m,+b.dataset.d);TD.hour=null;drawCal();drawSlots();updTd();});}
+function drawSlots(){const sat=TD.day&&TD.day.getDay()===6;$('#slots').innerHTML=HOURS.map((h,i)=>{const dis=!TD.day||(sat&&i>1)||busy(TD.day,i,TD.car);return `<button data-h="${i}" class="${TD.hour===i?'on':''}" ${dis?'disabled':''}>${h}</button>`;}).join('');
+ $$('#slots button').forEach(b=>b.onclick=()=>{TD.hour=+b.dataset.h;drawSlots();updTd();});}
+function updTd(){$('#tdDay').textContent=TD.day?TD.day.toLocaleDateString('es-ES',{weekday:'long',day:'numeric',month:'long'}):'—';$('#tdHour').textContent=TD.hour!=null?HOURS[TD.hour]:'—';$('#tdBtn').disabled=!(TD.day&&TD.hour!=null);}
+$('#pM').onclick=()=>{TD.view=new Date(TD.view.getFullYear(),TD.view.getMonth()-1,1);drawCal();};
+$('#nM').onclick=()=>{TD.view=new Date(TD.view.getFullYear(),TD.view.getMonth()+1,1);drawCal();};
+$('#tdForm').addEventListener('submit',e=>{e.preventDefault();const c=CARS[TD.car];$('#confT').innerHTML=`<b>${c.brand} ${c.name}</b><br>${$('#tdDay').textContent} · ${HOURS[TD.hour]}`;$('#confC').textContent='LMN-'+Math.random().toString(36).slice(2,7).toUpperCase();$('#conf').classList.add('open');confetti(c.acc);e.target.reset();});
+$$('#conf [data-close],#conf').forEach(el=>el.addEventListener('click',e=>{if(e.target===el||e.target.closest('[data-close]'))$('#conf').classList.remove('open');}));
+
+/* ============ MAPA ============ */
+const REAL_MAP=!/claude|anthropic/i.test(location.hostname+document.referrer);
+if(REAL_MAP)$('#map').insertAdjacentHTML('afterbegin','<iframe loading="lazy" title="Mapa de Madrid" src="https://maps.google.com/maps?q=Cuatro%20Torres%20Business%20Area%2C%20Madrid&z=15&ie=UTF8&iwloc=&output=embed"></iframe>');
+else $('#map').insertAdjacentHTML('afterbegin','<div class="fake"></div><div class="pin"><i></i><b>LUMEN · CASTELLANA</b></div>');
+
+/* ============ EXTRAS ============ */
+function confetti(col){const cv=$('#confetti'),x=cv.getContext('2d');cv.width=innerWidth;cv.height=innerHeight;const cols=[col,'#fff','#888'];
+ const P=Array.from({length:160},()=>({x:innerWidth/2,y:innerHeight/2,vx:(Math.random()-.5)*16,vy:-Math.random()*16-4,s:4+Math.random()*6,c:cols[Math.random()*3|0],r:Math.random()*6,vr:(Math.random()-.5)*.3}));const t0=performance.now();
+ (function f(t){x.clearRect(0,0,cv.width,cv.height);P.forEach(p=>{p.vy+=.45;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;x.save();x.translate(p.x,p.y);x.rotate(p.r);x.fillStyle=p.c;x.fillRect(-p.s/2,-p.s/4,p.s,p.s/2);x.restore();});if(t-t0<3200)requestAnimationFrame(f);else x.clearRect(0,0,cv.width,cv.height);})(t0);}
+$('#burger').onclick=()=>$('#nav').classList.toggle('open');$$('#links a').forEach(a=>a.addEventListener('click',()=>$('#nav').classList.remove('open')));
+$('#yr').textContent=new Date().getFullYear();
+
+/* ============ SCROLL ============ */
+const io=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){e.target.classList.add('in');io.unobserve(e.target);}}),{threshold:.15});$$('.reveal').forEach(el=>io.observe(el));
+const cio=new IntersectionObserver(es=>es.forEach(e=>{if(!e.isIntersecting)return;cio.unobserve(e.target);const el=e.target,to=+el.dataset.count,dv=+(el.dataset.div||1),t0=performance.now();(function f(t){const k=Math.min(1,(t-t0)/1700),v=to*(1-Math.pow(1-k,3))/dv;el.textContent=(dv>1?v.toFixed(1).replace('.',','):NUM.format(Math.round(v)))+(el.dataset.suf||'');if(k<1)requestAnimationFrame(f);})(t0);}),{threshold:.6});$$('[data-count]').forEach(el=>cio.observe(el));
+const cmpObs=new IntersectionObserver(es=>es.forEach(e=>{if(e.isIntersecting){updCmp();cmpObs.disconnect();}}),{threshold:.2});cmpObs.observe($('#comparar'));
+function onScroll(){$('#nav').classList.toggle('solid',scrollY>intro.offsetHeight-80);updIntro();updSt();updInside();updWheel();}
+addEventListener('scroll',onScroll,{passive:true});
+addEventListener('resize',()=>{placeWheel();if(USE_SEQ||!vidOK){sizeSeq();drawSeq(Math.round(seqI));}onScroll();});
+showCar(0,true);updCmp();updFin();selTd(0);drawCal();drawSlots();placeWheel();onScroll();
+addEventListener('load',()=>{placeWheel();onScroll();});
+</script>
+</body>
+</html>
